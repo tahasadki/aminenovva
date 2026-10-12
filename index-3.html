@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" id="html-root">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="متجر AMINNOVA: ساعات ذكية وسماعات ونظارات وحقائب بأفضل الأسعار وتوصيل مجاني لجميع المدن المغربية والدفع عند الاستلام.">
+<title>AMINNOVA - متجر عالي الجودة</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #080a0f; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #fff; overflow-x: hidden; }
+  #webgl-bg { position: fixed; inset: 0; z-index: -1; pointer-events: none; }
+
+  /* خلفية متحركة بتدرج لوني */
+  body::before {
+    content: ""; position: fixed; inset: -50%; z-index: -2;
+    background: radial-gradient(circle at 30% 20%, rgba(37,211,102,.18), transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(24,119,242,.15), transparent 40%);
+    animation: drift 18s ease-in-out infinite alternate;
+  }
+  @keyframes drift { to { transform: translate(6%, 4%) rotate(8deg); } }
+
+  .announcement-bar { background: linear-gradient(90deg, #25D366, #128C7E, #25D366); background-size: 200% 100%; animation: shine 6s linear infinite; color: #fff; font-size: 13px; font-weight: 700; padding: 8px 0; text-align: center; box-shadow: 0 2px 15px rgba(37,211,102,.35); }
+  @keyframes shine { to { background-position: 200% 0; } }
+
+  .top-bar { display: flex; justify-content: flex-end; max-width: 1100px; margin: 15px auto 0; padding: 0 20px; }
+  .lang-switcher { display: flex; gap: 6px; }
+  .lang-btn, .btn { background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.2); color: #fff; padding: 6px 14px; border-radius: 20px; cursor: pointer; font-size: 12px; font-weight: 700; transition: .25s; font-family: inherit; }
+  .lang-btn:hover, .lang-btn.on, .btn:hover, .btn.on { background: #25D366; border-color: #25D366; color: #000; box-shadow: 0 0 15px rgba(37,211,102,.5); }
+
+  /* العنوان */
+  header { text-align: center; padding: 30px 15px 10px; }
+  .logo-row { display: flex; align-items: center; justify-content: center; gap: 18px; }
+  .spin-watch { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; box-shadow: 0 0 20px rgba(37,211,102,.6); animation: float 4s ease-in-out infinite; }
+  .spin-watch.r { animation-delay: 2s; }
+  @keyframes float { 50% { transform: translateY(-10px) rotate(10deg); } }
+  .title-3d {
+    font-size: clamp(30px, 7vw, 52px); font-weight: 900; letter-spacing: 8px; padding: 14px 44px; border-radius: 24px;
+    background: linear-gradient(135deg, rgba(255,255,255,.1), rgba(15,23,42,.9));
+    border: 2px solid rgba(37,211,102,.45); backdrop-filter: blur(20px);
+    box-shadow: 0 15px 35px rgba(0,0,0,.7), 0 0 30px rgba(37,211,102,.3), inset 0 2px 5px rgba(255,255,255,.25);
+    background-clip: padding-box;
+    text-shadow: 0 0 18px rgba(37,211,102,.7);
+    animation: glow 3s ease-in-out infinite alternate;
+  }
+  @keyframes glow { to { box-shadow: 0 15px 35px rgba(0,0,0,.7), 0 0 50px rgba(37,211,102,.55), inset 0 2px 5px rgba(255,255,255,.25); } }
+  .sub { max-width: 620px; margin: 22px auto 0; color: #e2e8f0; background: rgba(15,23,42,.75); padding: 14px 22px; border-radius: 16px; border: 1px solid rgba(255,255,255,.12); backdrop-filter: blur(10px); font-weight: 600; }
+
+  /* التبويبات */
+  .switch { text-align: center; margin: 14px 10px 0; }
+  .switch .btn { margin: 4px; padding: 10px 22px; font-size: 14px; }
+  .section-title { text-align: center; font-size: 26px; font-weight: 800; letter-spacing: 2px; margin: 36px 0 26px; }
+  .section-title span { background: linear-gradient(90deg, #25D366, #fff, #25D366); background-size: 200%; -webkit-background-clip: text; color: transparent; animation: shine 4s linear infinite; }
+  .section-title::after { content: ""; display: block; width: 90px; height: 3px; margin: 8px auto 0; background: #25D366; border-radius: 3px; box-shadow: 0 0 12px #25D366; }
+
+  /* بطاقات المنتجات */
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 26px; max-width: 1100px; margin: 0 auto; padding: 0 16px 40px; perspective: 1000px; }
+  .card { position: relative; background: rgba(15,23,42,.75); border: 1px solid rgba(255,255,255,.12); border-radius: 22px; padding: 16px; backdrop-filter: blur(12px); text-align: center; transform-style: preserve-3d; transition: transform .15s ease, box-shadow .3s, border-color .3s; box-shadow: 0 12px 30px rgba(0,0,0,.5); animation: rise .7s ease both; overflow: hidden; }
+  .card:hover { border-color: rgba(37,211,102,.6); box-shadow: 0 20px 45px rgba(37,211,102,.25); }
+  .card::after { content: ""; position: absolute; top: 0; left: -75%; width: 50%; height: 100%; background: linear-gradient(120deg, transparent, rgba(255,255,255,.18), transparent); transform: skewX(-20deg); transition: left .7s; pointer-events: none; }
+  .card:hover::after { left: 130%; }
+  @keyframes rise { from { opacity: 0; transform: translateY(30px); } }
+  .img-box { width: 100%; height: 210px; border-radius: 16px; overflow: hidden; margin-bottom: 14px; background: #1e293b; }
+  .img-box img { width: 100%; height: 100%; object-fit: cover; transition: transform .6s ease; }
+  .card:hover .img-box img { transform: scale(1.1); }
+  .card h3 { font-size: 18px; margin-bottom: 6px; }
+  .card p { color: #94a3b8; font-size: 13px; line-height: 1.5; min-height: 38px; }
+  .price { display: inline-block; color: #25D366; font-weight: 900; font-size: 18px; margin: 10px 0 14px; padding: 6px 18px; border-radius: 30px; background: rgba(37,211,102,.1); border: 1px solid rgba(37,211,102,.35); text-shadow: 0 0 10px rgba(37,211,102,.5); }
+  .acts { display: flex; gap: 10px; }
+  .acts button, .acts a { flex: 1; padding: 11px; border-radius: 12px; border: none; font-weight: 800; font-size: 13px; text-decoration: none; text-align: center; cursor: pointer; transition: .25s; font-family: inherit; }
+  .b1 { background: #fff; color: #080a0f; }
+  .b1:hover { background: #25D366; color: #fff; transform: translateY(-2px); }
+  .b2 { background: rgba(37,211,102,.12); color: #25D366; border: 1px solid #25D366 !important; }
+  .b2:hover { background: #25D366; color: #fff; }
+  .empty, .loading { text-align: center; color: #94a3b8; padding: 50px 20px; grid-column: 1 / -1; font-size: 16px; }
+  .loading::after { content: "⏳"; display: block; font-size: 30px; margin-top: 8px; animation: float 1.5s infinite; }
+
+  /* الفوتر */
+  footer { text-align: center; padding: 35px 15px; background: rgba(5,7,10,.9); border-top: 1px solid rgba(255,255,255,.1); }
+  footer .social { display: flex; justify-content: center; gap: 14px; flex-wrap: wrap; }
+  footer .social a { color: #fff; text-decoration: none; padding: 13px 22px; border-radius: 16px; font-weight: 800; min-width: 140px; border: 1px solid rgba(255,255,255,.25); box-shadow: 0 10px 25px rgba(0,0,0,.5); transition: transform .3s cubic-bezier(.17,.89,.32,1.28); }
+  footer .social a:hover { transform: translateY(-6px) scale(1.05); }
+  .s-wa { background: linear-gradient(135deg, #25D366, #128C7E); }
+  .s-ig { background: linear-gradient(135deg, #f09433, #dc2743, #bc1888); }
+  .s-fb { background: linear-gradient(135deg, #1877f2, #0c5dc7); }
+
+  /* نوافذ منبثقة */
+  .overlay { display: none; position: fixed; inset: 0; background: rgba(5,7,10,.8); backdrop-filter: blur(8px); justify-content: center; align-items: center; z-index: 1000; padding: 15px; }
+  .overlay.open { display: flex; animation: fade .3s ease; }
+  @keyframes fade { from { opacity: 0; } }
+  .box { background: #0f172a; border: 1px solid rgba(37,211,102,.4); padding: 26px; border-radius: 22px; width: 100%; max-width: 420px; box-shadow: 0 25px 60px rgba(0,0,0,.8), 0 0 40px rgba(37,211,102,.15); animation: pop .35s cubic-bezier(.17,.89,.32,1.28); }
+  @keyframes pop { from { transform: scale(.85); opacity: 0; } }
+  .box h2, .box h3 { font-size: 22px; margin-bottom: 8px; }
+  .box .hint { color: #94a3b8; font-size: 13px; margin-bottom: 18px; }
+  .sel { margin-bottom: 18px; }
+  .sel label, .box label { display: block; font-size: 13px; color: #cbd5e1; margin: 8px 0 6px; font-weight: 600; }
+  .row { display: flex; gap: 10px; }
+  .row .opt { flex: 1; padding: 12px; border-radius: 12px; border: 1px solid rgba(255,255,255,.2); background: rgba(255,255,255,.05); color: #fff; font-weight: 800; cursor: pointer; transition: .3s; font-family: inherit; }
+  .row .opt.on { background: #25D366; border-color: #25D366; color: #000; box-shadow: 0 0 18px rgba(37,211,102,.5); }
+  .box input, .box textarea { width: 100%; padding: 12px; margin-bottom: 8px; background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.15); border-radius: 10px; color: #fff; font-family: inherit; font-size: 14px; }
+  .box input:focus, .box textarea:focus { outline: none; border-color: #25D366; box-shadow: 0 0 0 3px rgba(37,211,102,.2); }
+  .go { width: 100%; padding: 14px; background: linear-gradient(135deg, #25D366, #128C7E); color: #fff; border: none; border-radius: 12px; font-weight: 800; font-size: 15px; cursor: pointer; margin-top: 8px; box-shadow: 0 10px 25px rgba(37,211,102,.35); transition: .25s; font-family: inherit; }
+  .go:hover { transform: translateY(-2px); }
+  .cancel { width: 100%; padding: 11px; margin-top: 8px; background: rgba(255,255,255,.06); color: #cbd5e1; border: none; border-radius: 12px; cursor: pointer; font-family: inherit; }
+  .prod-name { color: #25D366; font-weight: 800; margin-bottom: 14px; font-size: 15px; }
+
+  .toast { position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%) translateY(120px); background: #25D366; color: #000; padding: 12px 24px; border-radius: 30px; font-weight: 800; box-shadow: 0 10px 30px rgba(37,211,102,.5); transition: transform .4s cubic-bezier(.17,.89,.32,1.28); z-index: 2000; }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+@media (max-width: 600px) {
+  h1.title-3d { font-size: 34px; letter-spacing: 4px; padding: 12px 26px; }
+  .spin-watch { width: 45px; height: 45px; }
+  .sub { font-size: 14px; }
+  .section-title { font-size: 22px; }
+  .grid { grid-template-columns: 1fr; gap: 20px; padding: 0 14px 30px; }
+  .card { padding: 14px; }
+  .img-box { height: 200px; }
+  .acts { flex-direction: row; }
+  .switch .btn { padding: 9px 16px; font-size: 13px; }
+}
+</style>
+</head>
+<body>
+
+<!-- نافذة الترحيب -->
+<div class="overlay open" id="welcome">
+  <div class="box">
+    <h2 id="w-title"></h2>
+    <p class="hint" id="w-sub"></p>
+    <div class="sel">
+      <label id="w-lang-l"></label>
+      <div class="row">
+        <button class="opt on" data-wlang="ar">العربية</button>
+        <button class="opt" data-wlang="fr">Français</button>
+        <button class="opt" data-wlang="en">English</button>
+      </div>
+    </div>
+    <div class="sel">
+      <label id="w-cat-l"></label>
+      <div class="row">
+        <button class="opt on" data-wcat="men">👨 رجالي</button>
+        <button class="opt" data-wcat="women">👩 نسائي</button>
+      </div>
+    </div>
+    <button class="go" id="w-start"></button>
+  </div>
+</div>
+
+<canvas id="webgl-bg"></canvas>
+
+<div class="announcement-bar" id="bar"></div>
+
+<div class="top-bar">
+  <div class="lang-switcher">
+    <button class="lang-btn" data-lang="ar">AR</button>
+    <button class="lang-btn" data-lang="fr">FR</button>
+    <button class="lang-btn" data-lang="en">EN</button>
+  </div>
+</div>
+
+<header>
+  <div class="logo-row">
+    <img class="spin-watch" src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=120&auto=format&fit=crop" alt="">
+    <h1 class="title-3d">AMINNOVA</h1>
+    <img class="spin-watch r" src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=120&auto=format&fit=crop" alt="">
+  </div>
+  <div class="sub" id="sub"></div>
+</header>
+
+<div class="switch">
+  <button class="btn" data-cat="men" id="tab-men"></button>
+  <button class="btn" data-cat="women" id="tab-women"></button>
+</div>
+
+<div class="section-title"><span id="heading"></span></div>
+<div class="grid" id="grid"><div class="loading" id="loading"></div></div>
+
+<footer>
+  <div class="social">
+    <a class="s-wa" href="https://wa.me/212611663775" target="_blank">WhatsApp</a>
+    <a class="s-ig" href="https://www.instagram.com" target="_blank">Instagram</a>
+    <a class="s-fb" href="https://www.facebook.com" target="_blank">Facebook</a>
+  </div>
+</footer>
+
+<!-- نافذة الطلب -->
+<div class="overlay" id="modal">
+  <div class="box">
+    <h3 id="m-title"></h3>
+    <p class="prod-name" id="m-prod"></p>
+    <form id="form">
+      <label id="l-name"></label><input id="c-name" required>
+      <label id="l-phone"></label><input id="c-phone" type="tel" required placeholder="06xxxxxxxx">
+      <label id="l-addr"></label><textarea id="c-addr" rows="2" required></textarea>
+      <button class="go" type="submit" id="m-go"></button>
+    </form>
+    <button class="cancel" id="m-cancel"></button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  // ======= ضع مفاتيحك الحقيقية هنا =======
+  const SUPABASE_URL = "https://movdkptnlpdlbkcukjkf.supabase.co";
+  const SUPABASE_KEY = "sb_publishable_0StM8SkZ09iDtACXy9ECMw_XUHFNXmY";
+  // ========================================
+
+  const WA = "212611663775";
+  const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  const $ = id => document.getElementById(id);
+
+  const T = {
+    ar: { dir: "rtl", bar: "✨ توصيل سريع ومجاني لجميع المدن المغربية 🇲🇦 | الدفع عند الاستلام ✨",
+          sub: "مرحباً بكم في متجركم، حيث تجدون أرقى المنتجات بأفضل الأسعار وبجودة عالية.",
+          men: "👨 القسم الرجالي", women: "👩 القسم النسائي", mh: "المنتجات الرجالية", wh: "المنتجات النسائية",
+          order: "🛒 اطلب الآن", wa: "واتساب", mt: "إتمام الطلب", n: "الاسم الكامل:", p: "رقم الهاتف:",
+          a: "العنوان / المدينة:", go: "تأكيد الطلب عبر واتساب", cancel: "إلغاء", empty: "لا توجد منتجات في هذا القسم حالياً",
+          wt: "مرحباً بك في AMINNOVA", ws: "الرجاء اختيار لغتك والقسم المفضل لديك:", wl: "اللغة:", wc: "القسم:",
+          start: "دخول للمتجر 🚀", added: "تم فتح واتساب بطلبك ✅", err: "تعذر تحميل المنتجات" },
+    fr: { dir: "ltr", bar: "✨ Livraison rapide et gratuite au Maroc 🇲🇦 | Paiement à la livraison ✨",
+          sub: "Bienvenue dans votre boutique, découvrez nos meilleurs produits de haute qualité.",
+          men: "👨 Section Homme", women: "👩 Section Femme", mh: "Produits Hommes", wh: "Produits Femmes",
+          order: "🛒 Commander", wa: "WhatsApp", mt: "Finaliser la commande", n: "Nom complet:", p: "Téléphone:",
+          a: "Adresse / Ville:", go: "Confirmer via WhatsApp", cancel: "Annuler", empty: "Aucun produit dans cette catégorie",
+          wt: "Bienvenue chez AMINNOVA", ws: "Veuillez choisir votre langue et votre catégorie :", wl: "Langue :", wc: "Catégorie :",
+          start: "Entrer dans la boutique 🚀", added: "WhatsApp ouvert avec votre commande ✅", err: "Impossible de charger les produits" },
+    en: { dir: "ltr", bar: "✨ Fast & free delivery across Morocco 🇲🇦 | Cash on delivery ✨",
+          sub: "Welcome to your store, find the finest products with high quality and best prices.",
+          men: "👨 Men Section", women: "👩 Women Section", mh: "Men Collection", wh: "Women Collection",
+          order: "🛒 Order Now", wa: "WhatsApp", mt: "Complete Order", n: "Full Name:", p: "Phone Number:",
+          a: "Address / City:", go: "Confirm via WhatsApp", cancel: "Cancel", empty: "No products in this section yet",
+          wt: "Welcome to AMINNOVA", ws: "Please select your language and category:", wl: "Language:", wc: "Category:",
+          start: "Enter Store 🚀", added: "WhatsApp opened with your order ✅", err: "Could not load products" }
+  };
+
+  let lang = "ar", cat = "men", products = [], currentId = null;
+
+  // ---------- تحميل المنتجات من Supabase ----------
+  async function load() {
+    const { data, error } = await db.from("products").select("*").order("id");
+    if (error) {
+      console.error(error);
+      $("grid").innerHTML = `<div class="empty">${T[lang].err}</div>`;
+      return;
+    }
+    products = data || [];
+    render();
+  }
+
+  // ---------- عرض الصفحة ----------
+  function render() {
+    const L = T[lang];
+    document.documentElement.lang = lang;
+    document.documentElement.dir = L.dir;
+    $("bar").textContent = L.bar;
+    $("sub").textContent = L.sub;
+    $("tab-men").textContent = L.men;
+    $("tab-women").textContent = L.women;
+    $("heading").textContent = cat === "men" ? L.mh : L.wh;
+    $("m-title").textContent = L.mt;
+    $("l-name").textContent = L.n;
+    $("l-phone").textContent = L.p;
+    $("l-addr").textContent = L.a;
+    $("m-go").textContent = L.go;
+    $("m-cancel").textContent = L.cancel;
+    $("w-title").textContent = L.wt;
+    $("w-sub").textContent = L.ws;
+    $("w-lang-l").textContent = L.wl;
+    $("w-cat-l").textContent = L.wc;
+    $("w-start").textContent = L.start;
+
+    document.querySelectorAll("[data-lang]").forEach(b => b.classList.toggle("on", b.dataset.lang === lang));
+    document.querySelectorAll("[data-cat]").forEach(b => b.classList.toggle("on", b.dataset.cat === cat));
+
+    const list = products.filter(p => p.category === cat);
+    $("grid").innerHTML = list.length ? list.map((p, i) => `
+      <div class="card" style="animation-delay:${i * 0.08}s">
+        <div class="img-box"><img src="${p.image || ''}" alt="" onerror="this.style.opacity=.2"></div>
+        <h3>${p["title_" + lang] || p.title_ar}</h3>
+        <p>${p["desc_" + lang] || p.desc_ar || ""}</p>
+        <div class="price">${p.price}</div>
+        <div class="acts">
+          <button class="b1" data-order="${p.id}">${L.order}</button>
+          <a class="b2" target="_blank" href="https://wa.me/${WA}?text=${encodeURIComponent(p.title_ar)}">${L.wa}</a>
+        </div>
+      </div>`).join("") : `<div class="empty">${L.empty}</div>`;
+  }
+
+  // ---------- أحداث الأزرار (تفويض واحد) ----------
+  document.querySelectorAll("[data-lang]").forEach(b => b.onclick = () => { lang = b.dataset.lang; render(); });
+  document.querySelectorAll("[data-cat]").forEach(b => b.onclick = () => { cat = b.dataset.cat; render(); });
+
+  document.querySelectorAll("[data-wlang]").forEach(b => b.onclick = () => {
+    lang = b.dataset.wlang;
+    document.querySelectorAll("[data-wlang]").forEach(x => x.classList.toggle("on", x === b));
+    render();
+  });
+  document.querySelectorAll("[data-wcat]").forEach(b => b.onclick = () => {
+    cat = b.dataset.wcat;
+    document.querySelectorAll("[data-wcat]").forEach(x => x.classList.toggle("on", x === b));
+    render();
+  });
+  $("w-start").onclick = () => $("welcome").classList.remove("open");
+
+  // تأثير ميلان ثلاثي الأبعاد للبطاقات
+  $("grid").addEventListener("mousemove", e => {
+    const card = e.target.closest(".card");
+    if (!card) return;
+    const r = card.getBoundingClientRect();
+    const x = (e.clientX - r.left) / r.width - .5;
+    const y = (e.clientY - r.top) / r.height - .5;
+    card.style.transform = `rotateY(${x * 10}deg) rotateX(${-y * 10}deg) translateY(-6px)`;
+  });
+  $("grid").addEventListener("mouseleave", () => {
+    document.querySelectorAll(".card").forEach(c => c.style.transform = "");
+  }, true);
+
+  $("grid").addEventListener("click", e => {
+    const btn = e.target.closest("[data-order]");
+    if (btn) openModal(Number(btn.dataset.order));
+  });
+
+  // ---------- نافذة الطلب ----------
+  function openModal(id) {
+    currentId = id;
+    const p = products.find(x => x.id === id);
+    $("m-prod").textContent = (p["title_" + lang] || p.title_ar) + " — " + p.price;
+    $("modal").classList.add("open");
+  }
+  function closeModal() { $("modal").classList.remove("open"); }
+  $("m-cancel").onclick = closeModal;
+  $("modal").addEventListener("click", e => { if (e.target.id === "modal") closeModal(); });
+
+  function toast(msg) {
+    const t = $("toast");
+    t.textContent = msg;
+    t.classList.add("show");
+    setTimeout(() => t.classList.remove("show"), 2800);
+  }
+
+  $("form").onsubmit = e => {
+    e.preventDefault();
+    const p = products.find(x => x.id === currentId);
+    const msg = `طلب جديد: ${p.title_ar} (${p.price})\nالاسم: ${$("c-name").value}\nالهاتف: ${$("c-phone").value}\nالعنوان: ${$("c-addr").value}`;
+    window.open(`https://wa.me/${WA}?text=${encodeURIComponent(msg)}`, "_blank");
+    closeModal();
+    $("form").reset();
+    toast(T[lang].added);
+  };
+
+  // ---------- خلفية Three.js ----------
+  const scene = new THREE.Scene();
+  scene.fog = new THREE.FogExp2(0x080a0f, 0.025);
+  const camera = new THREE.PerspectiveCamera(60, innerWidth / innerHeight, 0.1, 1000);
+  camera.position.set(0, 0, 8);
+  const renderer = new THREE.WebGLRenderer({ canvas: $("webgl-bg"), antialias: true, alpha: true });
+  renderer.setSize(innerWidth, innerHeight);
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+
+  scene.add(new THREE.AmbientLight(0xffffff, 1.1));
+  const light = new THREE.PointLight(0x25D366, 3, 30);
+  light.position.set(2, 4, 6);
+  scene.add(light);
+
+  function makeWatch() {
+    const g = new THREE.Group();
+    const dial = new THREE.Mesh(new THREE.CylinderGeometry(.8, .8, .12, 32),
+      new THREE.MeshStandardMaterial({ color: 0x1e293b, metalness: .9, roughness: .1 }));
+    dial.rotation.x = Math.PI / 2;
+    g.add(dial);
+    g.add(new THREE.Mesh(new THREE.TorusGeometry(.82, .06, 16, 32),
+      new THREE.MeshStandardMaterial({ color: 0x25D366, metalness: .95, emissive: 0x0a3d20 })));
+    const strapMat = new THREE.MeshStandardMaterial({ color: 0x0f172a });
+    const s1 = new THREE.Mesh(new THREE.BoxGeometry(.5, 1.2, .06), strapMat); s1.position.y = 1.1; g.add(s1);
+    const s2 = s1.clone(); s2.position.y = -1.1; g.add(s2);
+    return g;
+  }
+
+  const watches = [];
+  for (let i = 0; i < 12; i++) {
+    const w = makeWatch();
+    w.position.set((Math.random() - .5) * 14, -(i * 1.3) + 2, (Math.random() - .5) * 6);
+    const s = Math.random() * .4 + .6;
+    w.scale.set(s, s, s);
+    w.userData = { rx: (Math.random() - .5) * .02, ry: (Math.random() - .5) * .02 };
+    scene.add(w);
+    watches.push(w);
+  }
+
+  // جزيئات متلألئة
+  const N = 400, pos = new Float32Array(N * 3);
+  for (let i = 0; i < N * 3; i++) pos[i] = (Math.random() - .5) * 40;
+  const particles = new THREE.Points(
+    new THREE.BufferGeometry().setAttribute("position", new THREE.BufferAttribute(pos, 3)),
+    new THREE.PointsMaterial({ color: 0x25D366, size: .05, transparent: true, opacity: .7 })
+  );
+  scene.add(particles);
+
+  let scrollY = 0;
+  addEventListener("scroll", () => { scrollY = scrollY = window.scrollY; });
+  addEventListener("resize", () => {
+    camera.aspect = innerWidth / innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(innerWidth, innerHeight);
+  });
+
+  function animate() {
+    requestAnimationFrame(animate);
+    camera.position.y += (-(scrollY / innerHeight) * 4 - camera.position.y) * .08;
+    watches.forEach(w => { w.rotation.x += w.userData.rx; w.rotation.y += w.userData.ry; });
+    particles.rotation.y += .0007;
+    renderer.render(scene, camera);
+  }
+  animate();
+
+  // ---------- التشغيل ----------
+  load();
+</script>
+</body>
+</html>
