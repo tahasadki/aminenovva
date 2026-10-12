@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="google-site-verification" content="DjMXh3z3Xx_yA6mG33IWQreLIhw0VzUEBOEponZMI64" />
 <meta name="description" content="متجر AMINNOVA: ساعات ذكية وسماعات ونظارات وحقائب بأفضل الأسعار وتوصيل مجاني لجميع المدن المغربية والدفع عند الاستلام.">
 <title>AMINNOVA - متجر عالي الجودة</title>
 
@@ -11,10 +12,9 @@
 
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { background: #080a0f; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #fff; overflow-x: hidden; }
+  body { background: #080a0f; font-family: 'Segoe UI', Tahoma, sans-serif; color: #fff; overflow-x: hidden; }
   #webgl-bg { position: fixed; inset: 0; z-index: -1; pointer-events: none; }
 
-  /* خلفية متحركة بتدرج لوني */
   body::before {
     content: ""; position: fixed; inset: -50%; z-index: -2;
     background: radial-gradient(circle at 30% 20%, rgba(37,211,102,.18), transparent 40%),
@@ -31,7 +31,6 @@
   .lang-btn, .btn { background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.2); color: #fff; padding: 6px 14px; border-radius: 20px; cursor: pointer; font-size: 12px; font-weight: 700; transition: .25s; font-family: inherit; }
   .lang-btn:hover, .lang-btn.on, .btn:hover, .btn.on { background: #25D366; border-color: #25D366; color: #000; box-shadow: 0 0 15px rgba(37,211,102,.5); }
 
-  /* العنوان */
   header { text-align: center; padding: 30px 15px 10px; }
   .logo-row { display: flex; align-items: center; justify-content: center; gap: 18px; }
   .spin-watch { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; box-shadow: 0 0 20px rgba(37,211,102,.6); animation: float 4s ease-in-out infinite; }
@@ -49,14 +48,12 @@
   @keyframes glow { to { box-shadow: 0 15px 35px rgba(0,0,0,.7), 0 0 50px rgba(37,211,102,.55), inset 0 2px 5px rgba(255,255,255,.25); } }
   .sub { max-width: 620px; margin: 22px auto 0; color: #e2e8f0; background: rgba(15,23,42,.75); padding: 14px 22px; border-radius: 16px; border: 1px solid rgba(255,255,255,.12); backdrop-filter: blur(10px); font-weight: 600; }
 
-  /* التبويبات */
   .switch { text-align: center; margin: 14px 10px 0; }
   .switch .btn { margin: 4px; padding: 10px 22px; font-size: 14px; }
   .section-title { text-align: center; font-size: 26px; font-weight: 800; letter-spacing: 2px; margin: 36px 0 26px; }
   .section-title span { background: linear-gradient(90deg, #25D366, #fff, #25D366); background-size: 200%; -webkit-background-clip: text; color: transparent; animation: shine 4s linear infinite; }
   .section-title::after { content: ""; display: block; width: 90px; height: 3px; margin: 8px auto 0; background: #25D366; border-radius: 3px; box-shadow: 0 0 12px #25D366; }
 
-  /* بطاقات المنتجات */
   .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 26px; max-width: 1100px; margin: 0 auto; padding: 0 16px 40px; perspective: 1000px; }
   .card { position: relative; background: rgba(15,23,42,.75); border: 1px solid rgba(255,255,255,.12); border-radius: 22px; padding: 16px; backdrop-filter: blur(12px); text-align: center; transform-style: preserve-3d; transition: transform .15s ease, box-shadow .3s, border-color .3s; box-shadow: 0 12px 30px rgba(0,0,0,.5); animation: rise .7s ease both; overflow: hidden; }
   .card:hover { border-color: rgba(37,211,102,.6); box-shadow: 0 20px 45px rgba(37,211,102,.25); }
@@ -78,7 +75,6 @@
   .empty, .loading { text-align: center; color: #94a3b8; padding: 50px 20px; grid-column: 1 / -1; font-size: 16px; }
   .loading::after { content: "⏳"; display: block; font-size: 30px; margin-top: 8px; animation: float 1.5s infinite; }
 
-  /* الفوتر */
   footer { text-align: center; padding: 35px 15px; background: rgba(5,7,10,.9); border-top: 1px solid rgba(255,255,255,.1); }
   footer .social { display: flex; justify-content: center; gap: 14px; flex-wrap: wrap; }
   footer .social a { color: #fff; text-decoration: none; padding: 13px 22px; border-radius: 16px; font-weight: 800; min-width: 140px; border: 1px solid rgba(255,255,255,.25); box-shadow: 0 10px 25px rgba(0,0,0,.5); transition: transform .3s cubic-bezier(.17,.89,.32,1.28); }
@@ -87,7 +83,6 @@
   .s-ig { background: linear-gradient(135deg, #f09433, #dc2743, #bc1888); }
   .s-fb { background: linear-gradient(135deg, #1877f2, #0c5dc7); }
 
-  /* نوافذ منبثقة */
   .overlay { display: none; position: fixed; inset: 0; background: rgba(5,7,10,.8); backdrop-filter: blur(8px); justify-content: center; align-items: center; z-index: 1000; padding: 15px; }
   .overlay.open { display: flex; animation: fade .3s ease; }
   @keyframes fade { from { opacity: 0; } }
@@ -109,25 +104,26 @@
 
   .toast { position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%) translateY(120px); background: #25D366; color: #000; padding: 12px 24px; border-radius: 30px; font-weight: 800; box-shadow: 0 10px 30px rgba(37,211,102,.5); transition: transform .4s cubic-bezier(.17,.89,.32,1.28); z-index: 2000; }
   .toast.show { transform: translateX(-50%) translateY(0); }
-@media (max-width: 600px) {
-  .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; padding: 0 8px 20px; }
-  .card { padding: 6px; border-radius: 12px; }
-  .img-box { height: 90px; margin-bottom: 6px; border-radius: 10px; }
-  .card h3 { font-size: 12px; margin: 4px 0 2px; }
-  .card p { font-size: 9px; min-height: 0; margin: 0; line-height: 1.3; }
-  .price { font-size: 11px; padding: 3px 6px; margin: 4px 0 6px; }
-  .acts { flex-direction: column; gap: 4px; }
-  .acts button, .acts a { font-size: 10px; padding: 6px 2px; }
-  .title-3d { font-size: 28px; letter-spacing: 3px; padding: 10px 18px; }
-  .spin-watch { width: 34px; height: 34px; }
-  .switch .btn { padding: 7px 12px; font-size: 12px; }
-  .section-title { font-size: 20px; }
-}
+
+  /* ===== الهاتف: ثلاث بطاقات في كل صف مثل الحاسوب ===== */
+  @media (max-width: 600px) {
+    .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; padding: 0 8px 20px; }
+    .card { padding: 6px; border-radius: 12px; }
+    .img-box { height: 90px; margin-bottom: 6px; border-radius: 10px; }
+    .card h3 { font-size: 12px; margin: 4px 0 2px; }
+    .card p { font-size: 9px; min-height: 0; margin: 0; line-height: 1.3; }
+    .price { font-size: 11px; padding: 3px 6px; margin: 4px 0 6px; }
+    .acts { flex-direction: column; gap: 4px; }
+    .acts button, .acts a { font-size: 10px; padding: 6px 2px; }
+    .title-3d { font-size: 28px; letter-spacing: 3px; padding: 10px 18px; }
+    .spin-watch { width: 34px; height: 34px; }
+    .switch .btn { padding: 7px 12px; font-size: 12px; }
+    .section-title { font-size: 20px; }
+  }
 </style>
 </head>
 <body>
 
-<!-- نافذة الترحيب -->
 <div class="overlay open" id="welcome">
   <div class="box">
     <h2 id="w-title"></h2>
@@ -188,7 +184,6 @@
   </div>
 </footer>
 
-<!-- نافذة الطلب -->
 <div class="overlay" id="modal">
   <div class="box">
     <h3 id="m-title"></h3>
@@ -206,10 +201,10 @@
 <div class="toast" id="toast"></div>
 
 <script>
-  // ======= ضع مفاتيحك الحقيقية هنا =======
+  // ======= ضع مفتاحك الحقيقي هنا (انسخه من الملف القديم على GitHub) =======
   const SUPABASE_URL = "https://movdkptnlpdlbkcukjkf.supabase.co";
   const SUPABASE_KEY = "sb_publishable_0StM8SkZ09iDtACXy9ECMw_XUHFNXmY";
-  // ========================================
+  // ========================================================================
 
   const WA = "212611663775";
   const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -241,7 +236,6 @@
 
   let lang = "ar", cat = "men", products = [], currentId = null;
 
-  // ---------- تحميل المنتجات من Supabase ----------
   async function load() {
     const { data, error } = await db.from("products").select("*").order("id");
     if (error) {
@@ -253,9 +247,9 @@
     render();
   }
 
-  // ---------- عرض الصفحة ----------
   function render() {
     const L = T[lang];
+    try { localStorage.setItem("lang", lang); } catch (e) {}
     document.documentElement.lang = lang;
     document.documentElement.dir = L.dir;
     $("bar").textContent = L.bar;
@@ -281,8 +275,8 @@
     const list = products.filter(p => p.category === cat);
     $("grid").innerHTML = list.length ? list.map((p, i) => `
       <div class="card" style="animation-delay:${i * 0.08}s">
-        <div class="img-box"><img src="${p.image || ''}" alt="" onerror="this.style.opacity=.2"></div>
-        <h3>${p["title_" + lang] || p.title_ar}</h3>
+        <a href="product.html?id=${p.id}" style="display:block"><div class="img-box"><img src="${p.image || ''}" alt="" onerror="this.style.opacity=.2"></div></a>
+        <h3><a href="product.html?id=${p.id}" style="color:inherit;text-decoration:none">${p["title_" + lang] || p.title_ar}</a></h3>
         <p>${p["desc_" + lang] || p.desc_ar || ""}</p>
         <div class="price">${p.price}</div>
         <div class="acts">
@@ -292,7 +286,6 @@
       </div>`).join("") : `<div class="empty">${L.empty}</div>`;
   }
 
-  // ---------- أحداث الأزرار (تفويض واحد) ----------
   document.querySelectorAll("[data-lang]").forEach(b => b.onclick = () => { lang = b.dataset.lang; render(); });
   document.querySelectorAll("[data-cat]").forEach(b => b.onclick = () => { cat = b.dataset.cat; render(); });
 
@@ -308,7 +301,6 @@
   });
   $("w-start").onclick = () => $("welcome").classList.remove("open");
 
-  // تأثير ميلان ثلاثي الأبعاد للبطاقات
   $("grid").addEventListener("mousemove", e => {
     const card = e.target.closest(".card");
     if (!card) return;
@@ -326,7 +318,6 @@
     if (btn) openModal(Number(btn.dataset.order));
   });
 
-  // ---------- نافذة الطلب ----------
   function openModal(id) {
     currentId = id;
     const p = products.find(x => x.id === id);
@@ -393,7 +384,6 @@
     watches.push(w);
   }
 
-  // جزيئات متلألئة
   const N = 400, pos = new Float32Array(N * 3);
   for (let i = 0; i < N * 3; i++) pos[i] = (Math.random() - .5) * 40;
   const particles = new THREE.Points(
@@ -403,7 +393,7 @@
   scene.add(particles);
 
   let scrollY = 0;
-  addEventListener("scroll", () => { scrollY = scrollY = window.scrollY; });
+  addEventListener("scroll", () => { scrollY = window.scrollY; });
   addEventListener("resize", () => {
     camera.aspect = innerWidth / innerHeight;
     camera.updateProjectionMatrix();
@@ -419,8 +409,8 @@
   }
   animate();
 
-  // ---------- التشغيل ----------
   load();
 </script>
 </body>
 </html>
+
