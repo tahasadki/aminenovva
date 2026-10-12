@@ -110,15 +110,18 @@
   .toast { position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%) translateY(120px); background: #25D366; color: #000; padding: 12px 24px; border-radius: 30px; font-weight: 800; box-shadow: 0 10px 30px rgba(37,211,102,.5); transition: transform .4s cubic-bezier(.17,.89,.32,1.28); z-index: 2000; }
   .toast.show { transform: translateX(-50%) translateY(0); }
 @media (max-width: 600px) {
-  h1.title-3d { font-size: 34px; letter-spacing: 4px; padding: 12px 26px; }
-  .spin-watch { width: 45px; height: 45px; }
-  .sub { font-size: 14px; }
+  .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; padding: 0 10px 30px; }
+  .card { padding: 10px; border-radius: 16px; }
+  .img-box { height: 130px; margin-bottom: 8px; }
+  .card h3 { font-size: 14px; margin: 6px 0 4px; }
+  .card p { font-size: 11px; min-height: 0; }
+  .price { font-size: 14px; padding: 4px 12px; margin: 6px 0 8px; }
+  .acts { flex-direction: row; gap: 6px; }
+  .acts button, .acts a { font-size: 12px; padding: 9px 4px; }
+  .title-3d { font-size: 30px; letter-spacing: 4px; padding: 10px 22px; }
+  .spin-watch { width: 40px; height: 40px; }
+  .switch .btn { padding: 8px 14px; font-size: 13px; }
   .section-title { font-size: 22px; }
-  .grid { grid-template-columns: 1fr; gap: 20px; padding: 0 14px 30px; }
-  .card { padding: 14px; }
-  .img-box { height: 200px; }
-  .acts { flex-direction: row; }
-  .switch .btn { padding: 9px 16px; font-size: 13px; }
 }
 </style>
 </head>
