@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تفاصيل المنتج - AMINNOVA</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  :root {
+    --bg: #05060a;
+    --card: rgba(15, 20, 32, 0.72);
+    --line: rgba(255, 255, 255, 0.10);
+    --text: #f8fafc;
+    --muted: #94a3b8;
+    --green: #25D366;
+    --gold: #f5c76b;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    min-height: 100vh;
+    color: var(--text);
+    font-family: Tahoma, 'Segoe UI', Arial, sans-serif;
+    background:
+      radial-gradient(900px 500px at 15% -10%, rgba(37,211,102,.15), transparent 60%),
+      radial-gradient(800px 500px at 110% 10%, rgba(99,102,241,.18), transparent 60%),
+      var(--bg);
+    background-attachment: fixed;
+    overflow-x: hidden;
+  }
+
+  /* الشريط العلوي */
+  .top {
+    position: sticky; top: 0; z-index: 10;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 14px 20px;
+    background: rgba(5,6,10,.7);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--line);
+  }
+  .top a {
+    color: var(--text); text-decoration: none; font-weight: 700; font-size: 14px;
+    padding: 8px 14px; border-radius: 999px; border: 1px solid var(--line);
+    background: rgba(255,255,255,.04); transition: .25s;
+  }
+  .top a:hover { border-color: var(--green); color: var(--green); }
+  .brand {
+    font-weight: 900; letter-spacing: 4px; font-size: 16px;
+    background: linear-gradient(90deg, #fff, #25D366, #fff);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    background-size: 200% auto; animation: shine 4s linear infinite;
+  }
+  @keyframes shine { to { background-position: 200% center; } }
+
+  /* الحاوية الرئيسية */
+  .wrap {
+    max-width: 1000px; margin: 0 auto;
+    padding: 36px 20px 60px;
+    display: grid; grid-template-columns: 1.05fr 1fr; gap: 40px; align-items: center;
+  }
+
+  /* صورة المنتج */
+  .media {
+    position: relative;
+    border-radius: 28px;
+    padding: 2px;
+    background: linear-gradient(135deg, rgba(37,211,102,.6), rgba(255,255,255,.08) 45%, rgba(99,102,241,.5));
+    box-shadow: 0 30px 70px rgba(0,0,0,.6), 0 0 60px rgba(37,211,102,.12);
+    animation: floaty 6s ease-in-out infinite;
+  }
+  @keyframes floaty { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+  .media .inner {
+    border-radius: 26px; overflow: hidden; background: #111827;
+    aspect-ratio: 1 / 1; display: flex; align-items: center; justify-content: center;
+  }
+  .media img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .6s; }
+  .media:hover img { transform: scale(1.06); }
+
+  /* النص */
+  .cat {
+    display: inline-block; font-size: 12px; font-weight: 700; letter-spacing: 1px;
+    color: var(--muted); border: 1px solid var(--line);
+    background: rgba(255,255,255,.04);
+    padding: 6px 14px; border-radius: 999px; margin-bottom: 16px;
+  }
+  h1 {
+    margin: 0 0 18px; font-size: 34px; line-height: 1.25; font-weight: 900;
+    text-shadow: 0 0 25px rgba(255,255,255,.15);
+  }
+  .price {
+    display: inline-block; font-weight: 900; font-size: 26px; color: #04130a;
+    padding: 10px 26px; border-radius: 999px; margin-bottom: 22px;
+    background: linear-gradient(90deg, #25D366, #a7f3d0);
+    box-shadow: 0 10px 30px rgba(37,211,102,.35);
+  }
+  .desc {
+    color: #cbd5e1; line-height: 2; font-size: 15px; margin-bottom: 22px;
+    padding-bottom: 22px; border-bottom: 1px solid var(--line);
+  }
+
+  /* مميزات */
+  .perks { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 26px; }
+  .perk {
+    background: var(--card); border: 1px solid var(--line); border-radius: 16px;
+    padding: 12px 14px; font-size: 13px; color: var(--muted);
+    backdrop-filter: blur(8px);
+  }
+  .perk b { display: block; color: var(--text); font-size: 14px; margin-bottom: 2px; }
+
+  /* الأزرار */
+  .btns { display: flex; gap: 12px; }
+  .btns a {
+    flex: 1; text-align: center; padding: 16px; border-radius: 16px;
+    font-weight: 900; text-decoration: none; font-size: 15px; transition: .3s;
+  }
+  .b1 {
+    color: #04130a;
+    background: linear-gradient(90deg, #fff, #d1fae5);
+    box-shadow: 0 12px 30px rgba(255,255,255,.12);
+  }
+  .b1:hover { transform: translateY(-3px); box-shadow: 0 16px 40px rgba(37,211,102,.35); }
+  .b2 {
+    color: var(--green); border: 1px solid rgba(37,211,102,.5);
+    background: rgba(37,211,102,.1);
+  }
+  .b2:hover { background: var(--green); color: #04130a; transform: translateY(-3px); }
+
+  .back-msg { grid-column: 1 / -1; text-align: center; color: var(--muted); padding: 80px 20px; font-size: 16px; }
+  .back-msg a { color: var(--green); font-weight: 700; text-decoration: none; }
+
+  /* هيكل التحميل */
+  .skeleton { border-radius: 26px; background: linear-gradient(90deg, #111827, #1f2937, #111827); background-size: 200% 100%; animation: sk 1.4s infinite; aspect-ratio: 1/1; }
+  @keyframes sk { to { background-position: -200% 0; } }
+
+  /* الهاتف */
+  @media (max-width: 760px) {
+    .wrap { grid-template-columns: 1fr; gap: 26px; padding: 18px 16px 40px; }
+    .media { max-width: 420px; margin: 0 auto; width: 100%; }
+    h1 { font-size: 24px; }
+    .price { font-size: 21px; }
+    .perks { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="top">
+  <a href="index.html" id="back">→ رجوع للمتجر</a>
+  <div class="brand">AMINNOVA</div>
+</div>
+
+<div class="wrap" id="wrap">
+  <div class="media"><div class="skeleton"></div></div>
+  <div></div>
+</div>
+
+<script>
+  // ======= ضع مفتاحك العام هنا (نفس المفتاح الموجود في index.html) =======
+  const SUPABASE_URL = "https://movdkptnlpdlbkcukjkf.supabase.co";
+  const SUPABASE_KEY = "sb_publishable_0StM8SkZ09iDtACXy9ECMw_XUHFNXmY";
+  // ========================================================================
+
+  const WA = "212611663775";
+  const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  const T = {
+    ar: { dir: "rtl", back: "→ رجوع للمتجر", info: "القسم", delivery: "توصيل مجاني لجميع المدن المغربية",
+          pay: "الدفع عند الاستلام", quality: "منتج أصلي", support: "دعم عبر واتساب",
+          order: "🛒 اطلب الآن", wa: "💬 واتساب", msg: "مرحباً، أريد طلب:", nf: "هذا المنتج غير موجود",
+          back2: "العودة إلى المتجر", cat: { men: "رجالي", women: "نسائي" } },
+    fr: { dir: "ltr", back: "← Retour à la boutique", info: "Catégorie", delivery: "Livraison gratuite partout au Maroc",
+          pay: "Paiement à la livraison", quality: "Produit original", support: "Support WhatsApp",
+          order: "🛒 Commander", wa: "💬 WhatsApp", msg: "Bonjour, je souhaite commander :", nf: "Produit introuvable",
+          back2: "Retour à la boutique", cat: { men: "Homme", women: "Femme" } },
+    en: { dir: "ltr", back: "← Back to store", info: "Category", delivery: "Free delivery across Morocco",
+          pay: "Cash on delivery", quality: "Original product", support: "WhatsApp support",
+          order: "🛒 Order Now", wa: "💬 WhatsApp", msg: "Hello, I want to order:", nf: "Product not found",
+          back2: "Back to store", cat: { men: "Men", women: "Women" } }
+  };
+
+  let lang = "ar";
+  try { lang = localStorage.getItem("lang") || "ar"; } catch (e) {}
+  if (!T[lang]) lang = "ar";
+  const L = T[lang];
+  document.documentElement.lang = lang;
+  document.documentElement.dir = L.dir;
+  document.getElementById("back").textContent = L.back;
+
+  const id = Number(new URLSearchParams(location.search).get("id"));
+
+  function escapeHtml(s) {
+    return String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  }
+
+  async function load() {
+    const wrap = document.getElementById("wrap");
+
+    if (!id) {
+      showNotFound(wrap);
+      return;
+    }
+
+    const { data, error } = await db.from("products").select("*").eq("id", id).single();
+
+    if (error || !data) {
+      showNotFound(wrap);
+      return;
+    }
+
+    const title = data["title_" + lang] || data.title_ar || "";
+    const desc = data["desc_" + lang] || data.desc_ar || "";
+    const cat = L.cat[data.category] || data.category || "";
+    document.title = title + " - AMINNOVA";
+
+    const text = encodeURIComponent(`${L.msg} ${title} (${data.price})`);
+
+    wrap.innerHTML = `
+      <div class="media">
+        <div class="inner"><img src="${escapeHtml(data.image || "")}" alt="${escapeHtml(title)}"></div>
+      </div>
+      <div>
+        <span class="cat">${escapeHtml(cat)}</span>
+        <h1>${escapeHtml(title)}</h1>
+        <div class="price">${escapeHtml(data.price)}</div>
+        <div class="desc">${escapeHtml(desc)}</div>
+        <div class="perks">
+          <div class="perk"><b>🚚 ${escapeHtml(L.delivery.split(" ")[0])}</b>${escapeHtml(L.delivery)}</div>
+          <div class="perk"><b>💵</b>${escapeHtml(L.pay)}</div>
+          <div class="perk"><b>✅</b>${escapeHtml(L.quality)}</div>
+          <div class="perk"><b>📱</b>${escapeHtml(L.support)}</div>
+        </div>
+        <div class="btns">
+          <a class="b1" href="https://wa.me/${WA}?text=${text}" target="_blank" rel="noopener">${L.order}</a>
+          <a class="b2" href="https://wa.me/${WA}" target="_blank" rel="noopener">${L.wa}</a>
+        </div>
+      </div>`;
+  }
+
+  function showNotFound(wrap) {
+    wrap.innerHTML = `<div class="back-msg">${L.nf}<br><br><a href="index.html">${L.back2}</a></div>`;
+  }
+
+  load();
+</script>
+</body>
+</html>
